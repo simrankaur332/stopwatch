@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+	<title>Stopwatch</title>
+	 <style>
+.container
+{
+padding-top:100px;
+text-align:center;
+}
+.mybutton
+{
+width:200px;
+height:70px;
+margin-top:100px;
+border-radius:6px;
+border:black;
+background-color:gray;
+font-size:16px;
+}
+</style>
+</head>
+<body>
+<body onload="show();">
+<div class="container">
+        <h1 class="title">stopwatch</h1>
+	<div>Time: <span id="time"></span></div>
+	<input type="button" value="start" onclick="start()";>
+	<input type="button" value="stop" onclick="stop()";>
+	<input type="button" value="reset" onclick="reset()";>
+</div>
+	<script>
+var	Stopwatch = function() {
+		
+		var	startAt	= 0;	
+		var	lapTime	= 0;
+
+		var	now	= function() {
+				return (new Date()).getTime(); 
+			}; 
+ 
+		
+		this.start = function() {
+				startAt	= startAt ? startAt : now();
+			};
+
+		
+		this.stop = function() {
+				
+				lapTime	= startAt ? lapTime + now() - startAt : lapTime;
+				startAt	= 0; 
+			};
+		this.reset = function() {
+				lapTime = startAt = 0;
+			};
+
+		
+		this.time = function() {
+				return lapTime + (startAt ? now() - startAt : 0); 
+			};
+	};
+
+var x = new Stopwatch();
+var time1;
+var clocktimer;
+
+function showtime(num, size) {
+	var s = "0000" + num;
+	return s.substr(s.length - size);
+}
+
+function formatTime(time) {
+	var hour= minute= second= msecond= 0;
+	var newTime = '';
+
+	hour = Math.floor( time / (60 * 60 * 1000) );
+	time = time % (60 * 60 * 1000);
+	minute = Math.floor( time / (60 * 1000) );
+	time = time % (60 * 1000);
+	second = Math.floor( time / 1000 );
+	msecond = time % 1000;
+
+	newTime = showtime(hour, 2) + ':' + showtime(minute, 2) + ':' + showtime(second, 2) + ':' + showtime(msecond, 3);
+	return newTime;
+}
+
+function show() {
+	time1 = document.getElementById('time');
+	updatetime();
+}
+
+function updatetime() {
+	time1.innerHTML = formatTime(x.time());
+}
+
+function start() {
+	clocktimer = setInterval("updatetime()", 1);
+	x.start();
+}
+
+function stop() {
+	x.stop();
+	clearInterval(clocktimer);
+}
+
+function reset() {
+	stop();
+	x.reset();
+	updatetime();
+}
+</script>
+</body>
+</html>
